@@ -16,7 +16,7 @@ param subnetName string
 // Define the Virtual Network
 resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
   name: vnetName
-  location location
+  location: location
   properties: {
     addressSpace: {
       addressPrefixes: [
@@ -30,12 +30,14 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
           addressPrefix: '10.0.1.0/24'
 
           // Define ACR and Monitor endpoints
-          {
-            service: 'Microsoft.ContainerRegistry'
-          }
-          {
-            service: 'Microsoft.Insights'
-          }
+          serviceEndpoints: [
+            {
+              service: 'Microsoft.ContainerRegistry'
+            }
+            {
+              service: 'Microsoft.Insights'
+            }
+          ]
         }
       }
     ]
