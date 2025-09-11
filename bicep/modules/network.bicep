@@ -34,9 +34,6 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-09-01' = {
             {
               service: 'Microsoft.ContainerRegistry'
             }
-            {
-              service: 'Microsoft.Insights'
-            }
           ]
         }
       }

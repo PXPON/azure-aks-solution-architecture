@@ -6,7 +6,7 @@
 // =====================================
 param acrName string
 param location string
-param acrSku string = 'Basic'
+param acrSku string = 'Base'
 
 // =====================================
 // === Resources ===
@@ -22,6 +22,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
   properties: {
     // Enabling an admin user to be quick and simple
     // Switch to a Managed Identity in production
+    adminUserEnabled: true
   }
 }
 
