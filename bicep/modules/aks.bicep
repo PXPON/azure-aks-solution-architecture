@@ -49,13 +49,14 @@ resource aksCluster 'Microsoft.ContainerService/managedClusters@2023-10-01' = {
       type: 'SystemAssigned'
     }
   }
+}
 
 // Add a role assignment for the AKS managed identity to pull from ACR
 
 resource acrPullRole 'Microsoft.Authorization/roleAssignment@2022-04-01' = {
   name: guid(aksCluster.id, acrLoginServer)
   properties: {
-    roleDefinitionId: subsriptionResourceId('Microsoft. Authorization/roleDefinitions', '7f951384-b040-41f4-9088-6c75ab420a89') // ACR Pull Role
+    roleDefinitionId: subscriptionResourceId('Microsoft. Authorization/roleDefinitions', '7f951384-b040-41f4-9088-6c75ab420a89') // ACR Pull Role
     principalId: aksCluster.identity.principalId
     principalType: 'ServicePrincipal'
   }
