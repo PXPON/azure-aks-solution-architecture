@@ -4,7 +4,6 @@
 // === Parameters ===
 // =====================================
 
-param location string
 param aksClusterName string
 param fluxExtensionName string
 
@@ -25,25 +24,36 @@ resource fluxExtension 'Microsoft.KubernetesConfiguration/extensions@2023-09-01'
     extensionType: 'Microsoft.Flux'
     autoUpgradeMinorVersion: true
     scope: 'Cluster'
-    configurationSettings: {
-      'helm.versions': 'v3.12.3'
-      'kustomize.versions': 'v5.1.1'
-      'source-controller.version': 'v1.1.2'
-    }
-    configurationProtectedSettings: {
-      'helm.secretRef': 'github-token'
-    }
-    sourceControlConfiguration: {
-      repositoryUrl: 'https://github.com/Azure/gitops-flux2-kustomize-helm'
-      referenceType: 'Branch'
-      branch: 'main'
-      clusterType: 'connectedCluster'
-      syncIntervalInSeconds: 30
+    configurationSettings: {}
+  }
+}
 
-      // Refer to a simple program for an NGINX demo app
-      repositorySubDirectory: './examples/hello-world'
+// Define a Flux configuration to sync from a Git repo
+resource fluxConfig 'Microsoft.KubernetesConfiguration/fluxConfigurations@2023-05-01' = {
+  scope: aks
+  name: 'hello-world'
+  properties: {
+    scope: 'cluster'
+    namespace: 'flux-system'
+    sourceKind: 'GitRepository'
+    gitRepository: {
+      url: 'https://github.com/Azure/gitops-flux2-kustomize-helm'
+      repositoryRef: {
+        branch: 'main'
+      }
+      syncIntervalInSeconds: 30
+    }
+    kustomizations: {
+      app: {
+        path: './examples/hello-world'
+        prune: true
+        syncIntervalInSeconds: 30
+      }
     }
   }
+  dependsOn: [
+    fluxExtension
+  ]
 }
 
 // =====================================
