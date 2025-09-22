@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-aks-solution-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: azure-aks-solution-app
+    template:
+      metadata:
+        matchLabels:
+          app: azure-aks-solution-app
+      spec:
+        containers:
+        - name: azure-aks-solution-app
+          image: ngninxdemos/nginx-prometheus-exporter:latest
+          ports: 
+          - containerPort: 9113
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azure-aks-solution-app
+spec:
+  selector:
+    app: azure-aks-solution-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 9113
